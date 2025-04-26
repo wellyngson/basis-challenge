@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
@@ -43,6 +44,8 @@ fun AppTextField(
     backgroundColor: Color = GrayPrimary.copy(alpha = 0.3f),
     maxLines: Int = Int.MAX_VALUE,
     imeAction: ImeAction = ImeAction.Default,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     isPassword: Boolean = false,
     isFocused: Boolean = false,
     onNext: () -> Unit = {},
@@ -72,7 +75,7 @@ fun AppTextField(
         modifier = modifier.fillMaxWidth().focusRequester(focusRequester),
         maxLines = maxLines,
         placeholder = {
-            Text(text = placeholder, style = TextType.button3)
+            Text(text = placeholder, style = TextType.label3)
         },
         colors =
             TextFieldDefaults.colors(
@@ -90,10 +93,10 @@ fun AppTextField(
             textFieldValue.value = it
             textChanged(it.text)
         },
-        textStyle = TextType.button3,
+        textStyle = TextType.label3,
         visualTransformation =
             PasswordVisualTransformation().takeIf { isPassword && !passwordVisible.value }
-                ?: VisualTransformation.None,
+                ?: visualTransformation,
         trailingIcon = {
             if (isPassword) {
                 val icon =
@@ -113,7 +116,11 @@ fun AppTextField(
                 }
             }
         },
-        keyboardOptions = KeyboardOptions.Default.copy(imeAction = imeAction),
+        keyboardOptions =
+            KeyboardOptions.Default.copy(
+                imeAction = imeAction,
+                keyboardType = keyboardType,
+            ),
         keyboardActions =
             KeyboardActions(
                 onNext = {

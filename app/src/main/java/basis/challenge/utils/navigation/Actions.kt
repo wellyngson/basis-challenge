@@ -9,4 +9,9 @@ class Actions(
     val navigateBack: () -> Unit = {
         navHostController.navigateUp()
     }
+
+    // Composables
+    val goToCreateUser: () -> Unit = {
+        navHostController.navigate(Route.CreateUser.route)
+    }
 }

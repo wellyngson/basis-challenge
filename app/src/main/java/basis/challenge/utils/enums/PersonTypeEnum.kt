@@ -1,8 +1,10 @@
 package basis.challenge.utils.enums
 
-enum class PersonTypeEnum {
-    INDIVIDUAL,
-    COMPANY,
+enum class PersonTypeEnum(
+    val code: String,
+) {
+    INDIVIDUAL("Pessoa Física"),
+    COMPANY("Pessoa Jurídica"),
     ;
 
     companion object {

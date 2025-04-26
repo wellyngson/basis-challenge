@@ -28,7 +28,7 @@ import basis.challenge.utils.theme.spacingXLarge
 fun HomeContent(
     modifier: Modifier = Modifier,
     uiState: HomeState,
-    addUser: () -> Unit = {},
+    goToCreateUser: () -> Unit = {},
 ) {
     val valueFiltered = remember { mutableStateOf<String?>(null) }
 
@@ -66,7 +66,7 @@ fun HomeContent(
                 },
             drawable = R.drawable.ic_more,
             text = "Novo usuário",
-            onClick = addUser,
+            onClick = goToCreateUser,
         )
 
         AppTextField(

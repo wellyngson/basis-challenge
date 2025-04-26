@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import basis.challenge.ui.createuser.CreateUserScreen
 import basis.challenge.ui.home.HomeScreen
 
 @Composable
@@ -15,11 +16,15 @@ internal fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Route.Home.route,
+        startDestination = Route.CreateUser.route,
     ) {
+        composable(route = Route.CreateUser.route) {
+            CreateUserScreen()
+        }
+
         composable(route = Route.Home.route) {
             HomeScreen(
-                goToAddUser = {},
+                goToCreateUser = actions.goToCreateUser,
             )
         }
     }

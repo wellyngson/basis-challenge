@@ -8,6 +8,7 @@ import basis.challenge.data.model.AddressEntity
 import basis.challenge.data.model.UserEntity
 import basis.challenge.data.repository.UserRepositoryImpl
 import basis.challenge.domain.repository.UserRepository
+import basis.challenge.ui.createuser.CreateUserPresent
 import basis.challenge.ui.home.HomePresent
 import basis.challenge.utils.constants.DEFAULT_DISPATCHER
 import basis.challenge.utils.constants.DEFAULT_SCOPE
@@ -64,6 +65,8 @@ private val presentationModule =
                 scope = get(named(SCOPE_WITH_SUPERVISOR_JOB)),
             )
         }
+
+        factory { CreateUserPresent() }
     }
 
 object AppModule {

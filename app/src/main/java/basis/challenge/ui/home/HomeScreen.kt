@@ -8,7 +8,7 @@ import org.koin.compose.koinInject
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    goToAddUser: () -> Unit,
+    goToCreateUser: () -> Unit,
 ) {
     val present: HomePresent = koinInject()
     val uiState = present.uiState.collectAsStateWithLifecycle()
@@ -16,6 +16,6 @@ fun HomeScreen(
     HomeContent(
         modifier = modifier,
         uiState = uiState.value,
-        addUser = goToAddUser,
+        goToCreateUser = goToCreateUser,
     )
 }
