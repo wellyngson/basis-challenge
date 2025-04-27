@@ -1,5 +1,8 @@
 package basis.challenge.ui.home
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,8 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -37,6 +42,7 @@ import basis.challenge.utils.constants.EMPTY_STRING
 import basis.challenge.utils.extensions.formatPhoneNumber
 import basis.challenge.utils.extensions.hide
 import basis.challenge.utils.extensions.show
+import basis.challenge.utils.theme.GrayTertiary
 import basis.challenge.utils.theme.TextType
 import basis.challenge.utils.theme.spacingNormal
 import basis.challenge.utils.theme.spacingSmall
@@ -58,7 +64,7 @@ fun HomeContent(
     val userToDeleted = remember { mutableStateOf<User?>(null) }
 
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
-        val (header, search, title, newUser, users, bottom) = createRefs()
+        val (header, search, title, newUser, users, emptyUser, bottom) = createRefs()
 
         Header(
             modifier =
@@ -184,57 +190,83 @@ private fun Users(
     onUserClicked: (User) -> Unit,
     onDeleteUser: (User) -> Unit,
 ) {
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(spacingTiny)) {
-        itemsIndexed(users) { index, user ->
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(spacingSmall))
-                        .clickable { onUserClicked(user) }
-                        .padding(vertical = spacingSmall, horizontal = spacingNormal),
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = user.name,
-                        style = TextType.h2,
-                        modifier = Modifier.padding(bottom = spacingTiny),
-                    )
+    if (users.isEmpty()) {
+        Column(
+            modifier =
+                modifier
+                    .padding(spacingNormal)
+                    .border(1.dp, GrayTertiary, RoundedCornerShape(spacingXLarge))
+                    .background(
+                        color = Color.White,
+                        shape = RoundedCornerShape(spacingXLarge),
+                    ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Image(
+                painter = painterResource(R.drawable.ic_empty_container),
+                contentDescription = null,
+            )
 
-                    Text(
-                        text = user.personType.code,
-                        style = TextType.button3,
-                        modifier = Modifier.padding(bottom = spacingTiny),
-                    )
-
-                    user.email?.let {
+            Text(
+                text = "Nada por aqui...",
+                style = TextType.h1,
+                modifier = Modifier.padding(top = spacingNormal),
+            )
+        }
+    } else {
+        LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(spacingTiny)) {
+            itemsIndexed(users) { index, user ->
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(spacingSmall))
+                            .clickable { onUserClicked(user) }
+                            .padding(vertical = spacingSmall, horizontal = spacingNormal),
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = it,
-                            style = TextType.subtitle1,
+                            text = user.name,
+                            style = TextType.h2,
                             modifier = Modifier.padding(bottom = spacingTiny),
+                        )
+
+                        Text(
+                            text = user.personType.code,
+                            style = TextType.button3,
+                            modifier = Modifier.padding(bottom = spacingTiny),
+                        )
+
+                        user.email?.let {
+                            Text(
+                                text = it,
+                                style = TextType.subtitle1,
+                                modifier = Modifier.padding(bottom = spacingTiny),
+                            )
+                        }
+
+                        Text(
+                            text = user.phone.formatPhoneNumber(),
+                            style = TextType.subtitle1,
                         )
                     }
 
-                    Text(
-                        text = user.phone.formatPhoneNumber(),
-                        style = TextType.subtitle1,
-                    )
+                    Column {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_trash),
+                            contentDescription = null,
+                            modifier =
+                                Modifier
+                                    .clip(CircleShape)
+                                    .clickable { onDeleteUser(user) },
+                        )
+                    }
                 }
 
-                Column {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_trash),
-                        contentDescription = null,
-                        modifier =
-                            Modifier
-                                .clip(CircleShape)
-                                .clickable { onDeleteUser(user) },
-                    )
+                if (index != users.lastIndex) {
+                    AppDivider(modifier.padding(horizontal = spacingNormal))
                 }
-            }
-
-            if (index != users.lastIndex) {
-                AppDivider(modifier.padding(horizontal = spacingNormal))
             }
         }
     }

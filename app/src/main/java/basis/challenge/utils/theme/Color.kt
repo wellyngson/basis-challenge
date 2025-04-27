@@ -14,3 +14,4 @@ val RedSecondary = Color(0xFF421C25)
 
 val GrayPrimary = Color(0xFFF9F9F9)
 val GraySecondary = Color(color = 0xFF3A3A3A)
+val GrayTertiary = Color(color = 0xFF676565)
