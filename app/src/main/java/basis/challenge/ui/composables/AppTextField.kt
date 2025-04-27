@@ -1,6 +1,8 @@
 package basis.challenge.ui.composables
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -34,6 +36,7 @@ import basis.challenge.utils.theme.RedPrimary
 import basis.challenge.utils.theme.TextType
 import basis.challenge.utils.theme.spacingNormal
 import basis.challenge.utils.theme.spacingSmall
+import basis.challenge.utils.theme.spacingTiny
 
 @Composable
 fun AppTextField(
@@ -48,6 +51,7 @@ fun AppTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     isPassword: Boolean = false,
     isFocused: Boolean = false,
+    showTitle: Boolean = false,
     onNext: () -> Unit = {},
     onDone: () -> Unit = {},
 ) {
@@ -71,66 +75,82 @@ fun AppTextField(
         }
     }
 
-    OutlinedTextField(
-        modifier = modifier.fillMaxWidth().focusRequester(focusRequester),
-        maxLines = maxLines,
-        placeholder = {
-            Text(text = placeholder, style = TextType.label3)
-        },
-        colors =
-            TextFieldDefaults.colors(
-                cursorColor = RedPrimary,
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
-                focusedIndicatorColor = RedPrimary,
-                unfocusedIndicatorColor = Color.Black,
-                focusedContainerColor = backgroundColor,
-                unfocusedContainerColor = backgroundColor,
-            ),
-        shape = RoundedCornerShape(spacingSmall),
-        value = textFieldValue.value,
-        onValueChange = {
-            textFieldValue.value = it
-            textChanged(it.text)
-        },
-        textStyle = TextType.label3,
-        visualTransformation =
-            PasswordVisualTransformation().takeIf { isPassword && !passwordVisible.value }
-                ?: visualTransformation,
-        trailingIcon = {
-            if (isPassword) {
-                val icon =
-                    if (passwordVisible.value) {
-                        R.drawable.ic_eye
-                    } else {
-                        R.drawable.ic_eye_off
-                    }
+    LaunchedEffect(value) {
+        if (textFieldValue.value.text != value) {
+            textFieldValue.value = TextFieldValue(text = value)
+        }
+    }
 
-                IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
-                    Icon(
-                        painter = painterResource(id = icon),
-                        modifier = Modifier.size(spacingNormal),
-                        tint = RedPrimary,
-                        contentDescription = EMPTY_STRING,
-                    )
+    Column(modifier.fillMaxWidth()) {
+        if (showTitle) {
+            Text(
+                text = placeholder,
+                style = TextType.h4,
+                modifier = Modifier.padding(bottom = spacingTiny),
+            )
+        }
+
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+            maxLines = maxLines,
+            placeholder = {
+                Text(text = placeholder, style = TextType.label3)
+            },
+            colors =
+                TextFieldDefaults.colors(
+                    cursorColor = RedPrimary,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    focusedIndicatorColor = RedPrimary,
+                    unfocusedIndicatorColor = Color.Black,
+                    focusedContainerColor = backgroundColor,
+                    unfocusedContainerColor = backgroundColor,
+                ),
+            shape = RoundedCornerShape(spacingSmall),
+            value = textFieldValue.value,
+            onValueChange = {
+                textFieldValue.value = it
+                textChanged(it.text)
+            },
+            textStyle = TextType.label3,
+            visualTransformation =
+                PasswordVisualTransformation().takeIf { isPassword && !passwordVisible.value }
+                    ?: visualTransformation,
+            trailingIcon = {
+                if (isPassword) {
+                    val icon =
+                        if (passwordVisible.value) {
+                            R.drawable.ic_eye
+                        } else {
+                            R.drawable.ic_eye_off
+                        }
+
+                    IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
+                        Icon(
+                            painter = painterResource(id = icon),
+                            modifier = Modifier.size(spacingNormal),
+                            tint = RedPrimary,
+                            contentDescription = EMPTY_STRING,
+                        )
+                    }
                 }
-            }
-        },
-        keyboardOptions =
-            KeyboardOptions.Default.copy(
-                imeAction = imeAction,
-                keyboardType = keyboardType,
-            ),
-        keyboardActions =
-            KeyboardActions(
-                onNext = {
-                    onNext()
-                    focusManager.moveFocus(FocusDirection.Next)
-                },
-                onDone = {
-                    onDone()
-                    focusManager.clearFocus()
-                },
-            ),
-    )
+            },
+            keyboardOptions =
+                KeyboardOptions.Default.copy(
+                    imeAction = imeAction,
+                    keyboardType = keyboardType,
+                ),
+            keyboardActions =
+                KeyboardActions(
+                    onNext = {
+                        onNext()
+                        focusManager.moveFocus(FocusDirection.Next)
+                    },
+                    onDone = {
+                        onDone()
+                        focusManager.clearFocus()
+                    },
+                ),
+        )
+    }
 }

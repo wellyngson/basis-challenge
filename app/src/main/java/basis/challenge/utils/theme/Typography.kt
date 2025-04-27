@@ -12,7 +12,7 @@ object TextType {
         )
     val h1 =
         TextStyle(
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Bold,
             fontSize = sizeXXXLarge,
             letterSpacing = sizeNone,
         )

@@ -12,4 +12,16 @@ class UserLocalDataSourceImpl(
         flow {
             emit(userDao.findAll())
         }
+
+    override suspend fun createUser(userEntity: UserEntity) {
+        userDao.insert(userEntity)
+    }
+
+    override suspend fun deleteUser(userEntity: UserEntity) {
+        userDao.delete(userEntity._id)
+    }
+
+    override suspend fun updateUser(userEntity: UserEntity) {
+        userDao.update(userEntity)
+    }
 }

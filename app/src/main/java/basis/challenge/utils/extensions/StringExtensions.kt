@@ -1,6 +1,9 @@
 package basis.challenge.utils.extensions
 
 import android.util.Patterns
+import org.mongodb.kbson.ObjectId
+
+fun String.toObjectId(): ObjectId = ObjectId(this)
 
 fun String.onlyDigits(): String = this.filter { it.isDigit() }
 
@@ -139,7 +142,12 @@ fun String.formatPhoneNumber(): String {
                 )
             }-${digits.substring(7)}"
 
-            else -> "(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7, 11)}"
+            else -> "(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${
+                digits.substring(
+                    7,
+                    11,
+                )
+            }"
         }
     return unformatted.removeLastIfSymbol()
 }

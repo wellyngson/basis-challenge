@@ -5,8 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import basis.challenge.ui.createuser.CreateUserScreen
+import basis.challenge.domain.model.User
+import basis.challenge.ui.createorupdateuser.CreateOrUpdateUserScreen
 import basis.challenge.ui.home.HomeScreen
+import basis.challenge.utils.constants.ARGS_USER
 
 @Composable
 internal fun NavGraph(
@@ -16,15 +18,21 @@ internal fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Route.CreateUser.route,
+        startDestination = Route.Home.route,
     ) {
-        composable(route = Route.CreateUser.route) {
-            CreateUserScreen()
+        composable(route = Route.CreateOrUpdateUser.route) {
+            val user =
+                navController.previousBackStackEntry?.savedStateHandle?.get<User>(ARGS_USER)
+
+            CreateOrUpdateUserScreen(
+                user = user,
+                goBack = actions.navigateBack,
+            )
         }
 
         composable(route = Route.Home.route) {
             HomeScreen(
-                goToCreateUser = actions.goToCreateUser,
+                goToCreateOrUpdateUser = actions.goToCreateOrUpdateUser,
             )
         }
     }

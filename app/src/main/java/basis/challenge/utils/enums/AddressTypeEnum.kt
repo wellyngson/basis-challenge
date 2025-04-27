@@ -1,8 +1,14 @@
 package basis.challenge.utils.enums
 
-enum class AddressTypeEnum {
-    RESIDENTIAL,
-    COMMERCIAL,
+import androidx.annotation.DrawableRes
+import basis.challenge.R
+
+enum class AddressTypeEnum(
+    val code: String,
+    @DrawableRes val icon: Int,
+) {
+    RESIDENTIAL("Residencial", R.drawable.ic_home),
+    COMMERCIAL("Comercial", R.drawable.ic_company),
     ;
 
     companion object {

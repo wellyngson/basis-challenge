@@ -9,6 +9,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("io.realm.kotlin")
+    id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
 android {
