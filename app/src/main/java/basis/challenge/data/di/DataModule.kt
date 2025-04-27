@@ -1,4 +1,4 @@
-package basis.challenge.di
+package basis.challenge.data.di
 
 import basis.challenge.data.database.UserDao
 import basis.challenge.data.database.UserDaoImpl
@@ -6,10 +6,6 @@ import basis.challenge.data.datasource.UserLocalDataSource
 import basis.challenge.data.datasource.UserLocalDataSourceImpl
 import basis.challenge.data.model.AddressEntity
 import basis.challenge.data.model.UserEntity
-import basis.challenge.data.repository.UserRepositoryImpl
-import basis.challenge.domain.repository.UserRepository
-import basis.challenge.ui.createorupdateuser.CreateOrUpdateUserPresent
-import basis.challenge.ui.home.HomePresent
 import basis.challenge.utils.constants.DEFAULT_DISPATCHER
 import basis.challenge.utils.constants.DEFAULT_SCOPE
 import basis.challenge.utils.constants.IO_DISPATCHER
@@ -32,7 +28,8 @@ private val dispatcherModule =
         factory(named(DEFAULT_SCOPE)) { CoroutineScope(Dispatchers.Default) }
         factory(named(SCOPE_WITH_SUPERVISOR_JOB)) { CoroutineScope(SupervisorJob() + Dispatchers.Main) }
     }
-private val dataModule =
+
+private val databaseModule =
     module {
         single {
             val config =
@@ -45,35 +42,13 @@ private val dataModule =
         single<UserDao> {
             UserDaoImpl(get())
         }
+    }
 
+private val dataSourceModule =
+    module {
         factory<UserLocalDataSource> { UserLocalDataSourceImpl(userDao = get()) }
     }
-private val domainModule =
-    module {
-        factory<UserRepository> {
-            UserRepositoryImpl(
-                userLocalDataSource = get(),
-                dispatcher = get(named(IO_DISPATCHER)),
-            )
-        }
-    }
-private val presentationModule =
-    module {
-        factory {
-            HomePresent(
-                userRepository = get(),
-                scope = get(named(SCOPE_WITH_SUPERVISOR_JOB)),
-            )
-        }
 
-        factory {
-            CreateOrUpdateUserPresent(
-                userRepository = get(),
-                scope = get(named(SCOPE_WITH_SUPERVISOR_JOB)),
-            )
-        }
-    }
-
-object AppModule {
-    fun load() = loadKoinModules(dispatcherModule + dataModule + domainModule + presentationModule)
+object DataModule {
+    fun load() = loadKoinModules(dispatcherModule + databaseModule + databaseModule)
 }
