@@ -34,6 +34,7 @@ import basis.challenge.ui.composables.Header
 import basis.challenge.ui.composables.LoadingScreen
 import basis.challenge.ui.composables.UserDeletedWithSuccessDialog
 import basis.challenge.utils.constants.EMPTY_STRING
+import basis.challenge.utils.extensions.formatPhoneNumber
 import basis.challenge.utils.extensions.hide
 import basis.challenge.utils.extensions.show
 import basis.challenge.utils.theme.TextType
@@ -48,8 +49,8 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     uiState: HomeState,
     result: SharedFlow<HomeResult>,
+    sendIntent: (HomeAction) -> Unit,
     goToCreateOrUpdateUser: (User?) -> Unit,
-    deleteUser: (User) -> Unit,
 ) {
     val valueFiltered = remember { mutableStateOf<String?>(null) }
     val confirmDeleteDialog = remember { mutableStateOf(false) }
@@ -96,7 +97,7 @@ fun HomeContent(
         AppTextField(
             value = valueFiltered.value ?: EMPTY_STRING,
             textChanged = { valueFiltered.value = it },
-            placeholder = "Pesquise por nome, CPF/CNPJ",
+            placeholder = "Pesquise por nome, CPF/CNPJ, email e/ou telefone",
             maxLines = 1,
             modifier =
                 Modifier
@@ -117,7 +118,7 @@ fun HomeContent(
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
                 },
-            users = uiState.users,
+            users = uiState.usersFiltered,
             onUserClicked = goToCreateOrUpdateUser,
             onDeleteUser = {
                 confirmDeleteDialog.show()
@@ -139,7 +140,9 @@ fun HomeContent(
         ConfirmDeleteUser(
             onConfirmDeleteUser = {
                 confirmDeleteDialog.hide()
-                userToDeleted.value?.let { deleteUser(it) }
+                userToDeleted.value?.let {
+                    sendIntent(HomeAction.DeleteUser(it))
+                }
             },
             onCancel = {
                 confirmDeleteDialog.hide()
@@ -156,6 +159,10 @@ fun HomeContent(
 
     if (uiState.isLoading) {
         LoadingScreen()
+    }
+
+    LaunchedEffect(valueFiltered.value) {
+        sendIntent(HomeAction.FilterUsers(valueFiltered.value))
     }
 
     LaunchedEffect(result) {
@@ -188,9 +195,30 @@ private fun Users(
                         .padding(vertical = spacingSmall, horizontal = spacingNormal),
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = user.name, style = TextType.button3)
-                    user.email?.let { Text(text = it, style = TextType.label3) }
-                    Text(text = user.phone, style = TextType.label3)
+                    Text(
+                        text = user.name,
+                        style = TextType.h2,
+                        modifier = Modifier.padding(bottom = spacingTiny),
+                    )
+
+                    Text(
+                        text = user.personType.code,
+                        style = TextType.button3,
+                        modifier = Modifier.padding(bottom = spacingTiny),
+                    )
+
+                    user.email?.let {
+                        Text(
+                            text = it,
+                            style = TextType.subtitle1,
+                            modifier = Modifier.padding(bottom = spacingTiny),
+                        )
+                    }
+
+                    Text(
+                        text = user.phone.formatPhoneNumber(),
+                        style = TextType.subtitle1,
+                    )
                 }
 
                 Column {

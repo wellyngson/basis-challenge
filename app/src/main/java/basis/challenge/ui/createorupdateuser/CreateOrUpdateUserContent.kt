@@ -283,7 +283,7 @@ fun CreateOrUpdateUserContent(
             updateAddress = {
                 sendIntent(CreateOrUpdateUserAction.UpdateAddressInUser(it))
                 closeCreateAddressBottomSheet()
-            }
+            },
         )
     }
 

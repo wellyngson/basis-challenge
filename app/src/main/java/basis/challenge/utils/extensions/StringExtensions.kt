@@ -35,3 +35,13 @@ fun String.isValidCnpj(): Boolean {
 }
 
 fun String.isValidEmail(): Boolean = Patterns.EMAIL_ADDRESS.matcher(this).matches()
+
+fun String.formatPhoneNumber(): String {
+    val digits = this.filter { it.isDigit() }
+
+    return if (digits.length == 11) {
+        "(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7)}"
+    } else {
+        this
+    }
+}

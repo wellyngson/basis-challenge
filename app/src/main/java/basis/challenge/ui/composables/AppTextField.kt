@@ -139,7 +139,7 @@ fun AppTextField(
                 textFieldValue.value = newTextFieldValue.copy(text = filteredText)
                 textChanged(filteredText)
             },
-            textStyle = TextType.label3,
+            textStyle = TextType.subtitle1,
             visualTransformation =
                 PasswordVisualTransformation().takeIf { isPassword && !passwordVisible.value }
                     ?: visualTransformation,

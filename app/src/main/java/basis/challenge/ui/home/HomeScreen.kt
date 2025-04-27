@@ -18,7 +18,7 @@ fun HomeScreen(
         modifier = modifier,
         uiState = uiState.value,
         result = present.result,
+        sendIntent = { present.sendIntent(it) },
         goToCreateOrUpdateUser = goToCreateOrUpdateUser,
-        deleteUser = { present.sendIntent(HomeAction.DeleteUser(it)) },
     )
 }
