@@ -17,6 +17,9 @@ accompanist-systemuicontroller = "0.28.0"
 navigation-compose = "2.8.9"
 constraintlayout-compose = "1.1.1"
 realm-kotlin = "1.11.0"
+mockk = "1.13.12"
+androidx-test-ext-truth = "1.6.0"
+kotlinx-coroutines-test = "1.8.1"
 
 [libraries]
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
@@ -41,6 +44,10 @@ accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayout-compose" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 realm-kotlin = { module = "io.realm.kotlin:library-base", version.ref = "realm-kotlin" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockk-instrumentation = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+androidx-test-ext-truth = { module = "androidx.test.ext:truth", version.ref = "androidx-test-ext-truth" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

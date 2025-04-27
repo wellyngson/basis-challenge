@@ -5,6 +5,7 @@ import basis.challenge.data.model.AddressEntity
 import basis.challenge.utils.enums.AddressTypeEnum
 import basis.challenge.utils.extensions.toObjectId
 import kotlinx.parcelize.Parcelize
+import org.mongodb.kbson.ObjectId
 
 @Parcelize
 data class Address(
@@ -56,5 +57,18 @@ data class Address(
             this.state.takeIf { it.isNotEmpty() }?.let { addressParts.add(it) }
             return addressParts.joinToString(" - ")
         }
+
+        fun initializeEmptyAddress(): Address =
+            Address(
+                id = ObjectId().toHexString(),
+                type = AddressTypeEnum.RESIDENTIAL,
+                street = "",
+                number = null,
+                complement = null,
+                neighborhood = "",
+                zipCode = "",
+                city = "",
+                state = "",
+            )
     }
 }

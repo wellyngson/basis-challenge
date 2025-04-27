@@ -84,9 +84,16 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.core)
 
+    // Mockk
+    testImplementation(libs.mockk)
+    testImplementation(libs.androidx.test.ext.truth)
+
+    testImplementation(libs.kotlinx.coroutines.test)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.mockk.instrumentation)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
