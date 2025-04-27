@@ -18,6 +18,10 @@ interface CreateOrUpdateUserAction {
         val user: User,
     ) : CreateOrUpdateUserAction
 
+    data class UpdateAddressInUser(
+        val address: Address,
+    ) : CreateOrUpdateUserAction
+
     data class AddAddressInUser(
         val address: Address,
     ) : CreateOrUpdateUserAction

@@ -8,7 +8,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 fun cpfVisualTransformation(): VisualTransformation =
     VisualTransformation { text ->
         val digits = text.text.filter { it.isDigit() }
-
         val formattedText =
             buildString {
                 for (i in digits.indices) {
@@ -17,7 +16,6 @@ fun cpfVisualTransformation(): VisualTransformation =
                     if (i == 8) append('-')
                 }
             }
-
         val offsetMapping =
             object : OffsetMapping {
                 override fun originalToTransformed(offset: Int): Int {
@@ -43,7 +41,6 @@ fun cpfVisualTransformation(): VisualTransformation =
 fun cnpjVisualTransformation(): VisualTransformation =
     VisualTransformation { text ->
         val digits = text.text.filter { it.isDigit() }
-
         val formattedText =
             buildString {
                 for (i in digits.indices) {
@@ -53,7 +50,6 @@ fun cnpjVisualTransformation(): VisualTransformation =
                     if (i == 11) append('-')
                 }
             }
-
         val offsetMapping =
             object : OffsetMapping {
                 override fun originalToTransformed(offset: Int): Int {
@@ -81,7 +77,6 @@ fun cnpjVisualTransformation(): VisualTransformation =
 fun phoneVisualTransformation(): VisualTransformation =
     VisualTransformation { text ->
         val digits = text.text.filter { it.isDigit() }
-
         val formattedText =
             buildString {
                 for (i in digits.indices) {
@@ -93,7 +88,6 @@ fun phoneVisualTransformation(): VisualTransformation =
                     append(digits[i])
                 }
             }
-
         val offsetMapping =
             object : OffsetMapping {
                 override fun originalToTransformed(offset: Int): Int {
@@ -109,6 +103,34 @@ fun phoneVisualTransformation(): VisualTransformation =
                     if (offset > 0) originalOffset -= 1
                     if (offset > 3) originalOffset -= 2
                     if (offset > 8) originalOffset -= 1
+                    return originalOffset.coerceAtMost(digits.length)
+                }
+            }
+
+        TransformedText(AnnotatedString(formattedText), offsetMapping)
+    }
+
+fun cepVisualTransformation(): VisualTransformation =
+    VisualTransformation { text ->
+        val digits = text.text.filter { it.isDigit() }
+        val formattedText =
+            buildString {
+                for (i in digits.indices) {
+                    append(digits[i])
+                    if (i == 4) append('-')
+                }
+            }
+        val offsetMapping =
+            object : OffsetMapping {
+                override fun originalToTransformed(offset: Int): Int {
+                    var transformedOffset = offset
+                    if (offset > 4) transformedOffset += 1
+                    return transformedOffset.coerceAtMost(formattedText.length)
+                }
+
+                override fun transformedToOriginal(offset: Int): Int {
+                    var originalOffset = offset
+                    if (offset > 5) originalOffset -= 1
                     return originalOffset.coerceAtMost(digits.length)
                 }
             }

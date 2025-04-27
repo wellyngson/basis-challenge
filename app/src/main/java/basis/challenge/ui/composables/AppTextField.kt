@@ -31,6 +31,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import basis.challenge.R
 import basis.challenge.utils.constants.EMPTY_STRING
+import basis.challenge.utils.extensions.cepVisualTransformation
+import basis.challenge.utils.extensions.cnpjVisualTransformation
+import basis.challenge.utils.extensions.cpfVisualTransformation
+import basis.challenge.utils.extensions.phoneVisualTransformation
 import basis.challenge.utils.theme.GrayPrimary
 import basis.challenge.utils.theme.RedPrimary
 import basis.challenge.utils.theme.TextType
@@ -108,9 +112,32 @@ fun AppTextField(
                 ),
             shape = RoundedCornerShape(spacingSmall),
             value = textFieldValue.value,
-            onValueChange = {
-                textFieldValue.value = it
-                textChanged(it.text)
+            onValueChange = { newTextFieldValue ->
+                val filteredText =
+                    when (visualTransformation) {
+                        phoneVisualTransformation() -> {
+                            newTextFieldValue.text.filter { it.isDigit() }.take(11)
+                        }
+
+                        cpfVisualTransformation() -> {
+                            newTextFieldValue.text.filter { it.isDigit() }.take(11)
+                        }
+
+                        cnpjVisualTransformation() -> {
+                            newTextFieldValue.text.filter { it.isDigit() }.take(14)
+                        }
+
+                        cepVisualTransformation() -> {
+                            newTextFieldValue.text.filter { it.isDigit() }.take(8)
+                        }
+
+                        else -> {
+                            newTextFieldValue.text
+                        }
+                    }
+
+                textFieldValue.value = newTextFieldValue.copy(text = filteredText)
+                textChanged(filteredText)
             },
             textStyle = TextType.label3,
             visualTransformation =

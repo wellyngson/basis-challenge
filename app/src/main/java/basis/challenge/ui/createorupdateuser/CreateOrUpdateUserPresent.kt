@@ -17,16 +17,12 @@ class CreateOrUpdateUserPresent(
 
     override fun sendIntent(action: CreateOrUpdateUserAction) {
         when (action) {
-            is CreateOrUpdateUserAction.InitializeUser ->
-                initializeUser(
-                    action.user,
-                    action.isNewUser,
-                )
-
+            is CreateOrUpdateUserAction.InitializeUser -> initializeUser(action.user, action.isNewUser)
             is CreateOrUpdateUserAction.CreateUser -> createUser(action.user)
             is CreateOrUpdateUserAction.UpdateUser -> updateUser(action.user)
             is CreateOrUpdateUserAction.UpdatePersonType -> addPersonTypeInUser(action.personType)
             is CreateOrUpdateUserAction.AddAddressInUser -> addAddressInUser(action.address)
+            is CreateOrUpdateUserAction.UpdateAddressInUser -> updateAddressInUser(action.address)
             is CreateOrUpdateUserAction.RemoveAddressOfUser -> removeAddInUser(action.address)
         }
     }
@@ -69,6 +65,17 @@ class CreateOrUpdateUserPresent(
                 uiState.value.user
                     ?.addresses
                     ?.plus(address) ?: emptyList()
+            val newUser = uiState.value.user?.copy(addresses = newAddress)
+            updateUiState(uiState.value.copy(user = newUser))
+        }
+    }
+
+    private fun updateAddressInUser(address: Address) {
+        scope.launch {
+            val newAddress =
+                uiState.value.user
+                    ?.addresses
+                    ?.map { if (it.id == address.id) address else it } ?: emptyList()
             val newUser = uiState.value.user?.copy(addresses = newAddress)
             updateUiState(uiState.value.copy(user = newUser))
         }
