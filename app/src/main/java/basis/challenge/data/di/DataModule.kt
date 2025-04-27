@@ -50,5 +50,5 @@ private val dataSourceModule =
     }
 
 object DataModule {
-    fun load() = loadKoinModules(dispatcherModule + databaseModule + databaseModule)
+    fun load() = loadKoinModules(dispatcherModule + databaseModule + dataSourceModule)
 }
